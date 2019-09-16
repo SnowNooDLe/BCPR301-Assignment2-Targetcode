@@ -2,10 +2,12 @@ from TIGr import AbstractDrawer
 from Parser import IntegerParser, StringParser
 from tkinter import *
 from tkinter import ttk
+from Writer import *
 import math
 #Alliah & Chris
 
 class TkinterDrawer(AbstractDrawer):
+
     def __init__(self):
         self.root = Tk()
         self.north = Entry(self.root)
@@ -35,6 +37,8 @@ class TkinterDrawer(AbstractDrawer):
         self.entry = self.north.get()
         self.line_width = self.choose_size_button.get()
         self.pen_state = True
+        # so can be used in every mehotds.
+        self.file = Writer("TKInterDrawer_Result.txt")
 
     def setup(self):
 
@@ -43,6 +47,12 @@ class TkinterDrawer(AbstractDrawer):
         self.x = 250
         self.y = 250
         self.color = "black"
+
+        # Idea of getting value to be stored in txt file for testing
+        self.file.writeToFile("Pen size", self.choose_size_button)
+        self.file.writeToFile("X position", self.x)
+        self.file.writeToFile("Y position", self.y)
+        self.file.writeToFile("Pen color", self.color)
 
         self.c = Canvas(self.root, bg='white', width=500, height=500)
         self.c.grid_rowconfigure(0, weight=1)
@@ -89,7 +99,6 @@ class TkinterDrawer(AbstractDrawer):
         self.c.bind('<ButtonRelease-1>', self.reset)
 
     def select_pen(self, pen_num):
-        self.activate_button(self.pen_button)
         self.line_width = self.choose_size_button.get()
 
     def pen_down(self):

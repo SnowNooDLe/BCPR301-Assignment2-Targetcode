@@ -1,0 +1,4 @@
+Pen size: 1
+X position: 250
+Y position: 250
+Pen color: black
