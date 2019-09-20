@@ -34,7 +34,6 @@ class TurtleDrawer(AbstractDrawer):
             newDirection = 0
         if direction == 270:
             newDirection = 180
-
         turtle.seth(newDirection)
         turtle.forward(distance)
 

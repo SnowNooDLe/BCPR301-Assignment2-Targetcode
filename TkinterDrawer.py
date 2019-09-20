@@ -2,10 +2,12 @@ from TIGr import AbstractDrawer
 from Parser import IntegerParser, StringParser
 from tkinter import *
 from tkinter import ttk
+from Writer import *
 import math
 #Alliah & Chris
 
 class TkinterDrawer(AbstractDrawer):
+
     def __init__(self):
         self.root = Tk()
         self.north = Entry(self.root)
@@ -35,14 +37,21 @@ class TkinterDrawer(AbstractDrawer):
         self.entry = self.north.get()
         self.line_width = self.choose_size_button.get()
         self.pen_state = True
+        # so can be used in every mehotds.
+        self.file = Writer("TKInterDrawer_Result.txt")
 
     def setup(self):
-
         self.root.geometry("510x645")
         self.choose_size_button = 1
         self.x = 250
         self.y = 250
         self.color = "black"
+
+        # Idea of getting value to be stored in txt file for testing
+        self.file.writeToFile("Pen size", self.choose_size_button)
+        self.file.writeToFile("X position", self.x)
+        self.file.writeToFile("Y position", self.y)
+        self.file.writeToFile("Pen color", self.color)
 
         self.c = Canvas(self.root, bg='white', width=500, height=500)
         self.c.grid_rowconfigure(0, weight=1)
@@ -89,26 +98,31 @@ class TkinterDrawer(AbstractDrawer):
         self.c.bind('<ButtonRelease-1>', self.reset)
 
     def select_pen(self, pen_num):
-        self.activate_button(self.pen_button)
         self.line_width = self.choose_size_button.get()
+        self.file.writeToFile("Pen size", self.line_width)
 
     def pen_down(self):
         self.pen_state = True
+        self.file.writeToFile("Is pen down ?", self.pen_state)
 
     def pen_up(self):
         self.pen_state = False
+        self.file.writeToFile("Is pen down ?", self.pen_state)
 
     def go_along(self, along):
         self.x = along
+        self.file.writeToFile("New X Position", self.x)
 
     def go_down(self, down):
         self.y = down
+        self.file.writeToFile("New Y Position", self.y)
 
     def draw_line(self, direction, distance):
         if not self.pen_state:
             self.color = "white"
         else:
             self.color = "black"
+        self.file.writeToFile("Pen color", self.color)
 
         if direction == 0:
             new_direction = 0
@@ -119,7 +133,7 @@ class TkinterDrawer(AbstractDrawer):
             new_direction = 270
         if direction == 270:
             new_direction = 90
-
+        
         angle_in_radians = new_direction * math.pi / 180
 
         line_length = distance
@@ -132,26 +146,36 @@ class TkinterDrawer(AbstractDrawer):
         self.c.create_line(self.x, self.y, end_x, end_y, fill=self.color, width=self.line_width)
         self.x = end_x
         self.y = end_y
+        self.file.writeToFile("New X position", self.x)
+        self.file.writeToFile("New Y position", self.y)
 
     def draw_square(self):
+        self.file.writeToFile("We are drawing a square")
         if self.pen_state:
             directions = [0, 90, 180, 270]
             for i in directions:
                 self.draw_line(i, 50)
 
     def draw_circle(self):
+        self.file.writeToFile("We are drawing a circle")
         r = 50
         if self.pen_state:
             self.c.create_oval(self.x - r, self.y - r, self.x + r, self.y + r,width=self.line_width)
 
     def draw_triangle(self):
+        self.file.writeToFile("We are drawing a triangle")
         self.c.create_line(55, 85, 155, 85, 105, 180, 55, 85, width=self.line_width)
 
     def reset(self):
+        self.file.writeToFile("We are restting")
         self.x = 250
         self.y = 250
         self.c.delete("all")
+        self.file.writeToFile("Back to original X coordinate", self.x)
+        self.file.writeToFile("Back to original Y coordinate", self.y)
+
 
     def start(self):
+        self.file.writeToFile("Starting TKinter Drawer. Here we go ! ")
         self.setup()
         self.root.mainloop()
